@@ -1,15 +1,22 @@
+package gof;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
+@ToString
 public class Board {
 
   private List<Integer> board = new ArrayList<>();
+  public static final int ROWLENGTH = 4;
 
   public List<Integer> getGameBoard() {
     if (board.isEmpty()) {
@@ -21,9 +28,7 @@ public class Board {
   }
 
   public List<Integer> shuffleBoard(List<Integer> board) {
-    System.out.println(board.toString());
     Collections.shuffle(board);
-    System.out.println(board.toString());
     return board;
   }
 }
