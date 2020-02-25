@@ -17,15 +17,6 @@ public class Solver {
   private final UniqueQueue<List<Integer>> queue = new UniqueQueue<>();
   private Set<List<Integer>> alreadyChecked = new HashSet<>();
 
-  public int findEmptyTile(Board board) {
-    for (int i = 0; i < board.getGameBoard().size(); i++) {
-      if (board.getGameBoard().get(i) == 0) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
   public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
     Set<Integer> indexesToSwapWithEmptyTile = new HashSet<>();
     for (int i = 0; i < board.getGameBoard().size(); i++) {
@@ -63,22 +54,23 @@ public class Solver {
 
   public Board solve(Board boardToSolve) throws InterruptedException {
     queue.add(boardToSolve.getGameBoard());
+    System.out.println(boardToSolve.getGameBoard().toString());
     while (!queue.isEmpty()) {
       Board board = new Board();
+      System.out.println("before remove " + queue.toString());
       board.setBoard(queue.remove());
-      System.out.println(queue.toString());
       if (board.isSolved()) {
         System.out.println("Gameboard is solved");
         return board;
       }
       alreadyChecked.add(board.getGameBoard());
-      List<Integer> correctMoves = findThePossibleMoves(board, findEmptyTile(board));
+      List<Integer> correctMoves = findThePossibleMoves(board, board.findEmptyTile());
       for (int i = 0; i < correctMoves.size(); i++) {
         Board newBoard = new Board(board);
-        move(newBoard, correctMoves.get(i), findEmptyTile(newBoard));
+        move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
         queue.add(newBoard.getGameBoard());
       }
-//      queue.removeAll(alreadyChecked);
+      queue.removeAll(alreadyChecked);
       Thread.sleep(1000);
     }
     return null;

@@ -3,6 +3,8 @@ package gof;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,16 +21,8 @@ public class Board {
   public static final int ROWLENGTH = 3;
 
   public Board(Board board) {
-    Collections.copy(board.getGameBoard(), this.board);
+    this.board.addAll(board.getGameBoard());
   }
-
-//  public Board getNewBoard(Board oldBoard) {
-//    if (this.getGameBoard().equals(oldBoard.getGameBoard())) {
-//      return oldBoard;
-//    } else {
-//      return new Board(oldBoard);
-//    }
-//  }
 
   public List<Integer> getGameBoard() {
     if (board.isEmpty()) {
@@ -41,22 +35,34 @@ public class Board {
 
   public List<Integer> shuffleBoard() {
     do {
-      Collections.shuffle(getGameBoard());
+    Collections.shuffle(getGameBoard());
     } while (!isSolvable());
     return getGameBoard();
+  }
+  public int findEmptyTile() {
+    for (int i = 0; i < board.size(); i++) {
+      if (board.get(i) == 0) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   public boolean isSolvable() {
     int inversionCount = 0;
 
     for (int i = 0; i < board.size() - 1; i++) {
-      for (int j = 0; j < i; j++) {
-        if (board.get(j) > board.get(i)) {
+      for (int j = i+1; j < board.size(); j++) {
+        if ((board.get(j) < board.get(i)) && board.get(j)!=0) {
           inversionCount++;
         }
       }
     }
-    return inversionCount % 2 == 0;
+    System.out.println(inversionCount);
+    int emptyTile = findEmptyTile();
+    if(inversionCount > 0 && inversionCount < 4 && emptyTile>=board.size()-ROWLENGTH) {
+      return inversionCount % 2 == 0;
+    } else return false;
   }
 
   public boolean isSolved() {

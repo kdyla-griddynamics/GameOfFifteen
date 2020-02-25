@@ -25,6 +25,16 @@ public class BoardTest {
   }
 
   @Test
+  public void findsThePositionOfEmptyTile() {
+    //given
+    List<Integer> shuffleBoard = board.shuffleBoard();
+    //when
+    int emptyTileIndex = board.findEmptyTile();
+    //then
+    Assertions.assertEquals(0, (int) shuffleBoard.get(emptyTileIndex), "This '" + emptyTileIndex + "' is not the empty field index");
+  }
+
+  @Test
   public void checkIfTheGameboardIsSolvable() {
     //given
     List<Integer> shuffleBoard = board.shuffleBoard();

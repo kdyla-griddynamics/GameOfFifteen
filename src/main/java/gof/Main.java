@@ -12,10 +12,10 @@ public class Main {
     Solver solver = new Solver();
     System.out.println(board.isSolvable());
     System.out.println(solver.solve(board));
-    System.out.println(board.isSolved());
-    System.out.println(solver.findEmptyTile(board));
+//    System.out.println(board.isSolved());
+    System.out.println(board.findEmptyTile());
     System.out.println(solver.findThePossibleMoves(board,
-        solver.findEmptyTile(board)).toString());
+        board.findEmptyTile()).toString());
 
 
   }

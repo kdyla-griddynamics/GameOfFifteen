@@ -14,16 +14,6 @@ public class SolverTest {
   Board board = new Board();
   Solver solver = new Solver();
 
-  @Test
-  public void findsThePositionOfEmptyTile() {
-    //given
-    List<Integer> shuffleBoard = board.shuffleBoard();
-    //when
-    int emptyTileIndex = solver.findEmptyTile(board);
-    //then
-    Assertions.assertEquals(0, (int) shuffleBoard.get(emptyTileIndex), "This '" + emptyTileIndex + "' is not the empty field index");
-  }
-
   @ParameterizedTest
   @MethodSource("correctMoves")
   public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves) {
