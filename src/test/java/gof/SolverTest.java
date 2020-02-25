@@ -15,22 +15,11 @@ public class SolverTest {
   Solver solver = new Solver();
 
   @Test
-  public void checkIfTheGameboardIsSolvable() {
-    //given
-    List<Integer> shuffleBoard = board.shuffleBoard(board.getGameBoard());
-    //when
-    boolean isSolvable = solver.isSolvable(shuffleBoard);
-    //then
-    Assertions.assertEquals(solver.isSolved(shuffleBoard), isSolvable, "This check is not correct");
-
-  }
-
-  @Test
   public void findsThePositionOfEmptyTile() {
     //given
-    List<Integer> shuffleBoard = board.shuffleBoard(board.getGameBoard());
+    List<Integer> shuffleBoard = board.shuffleBoard();
     //when
-    int emptyTileIndex = solver.findEmptyTile(shuffleBoard);
+    int emptyTileIndex = solver.findEmptyTile(board);
     //then
     Assertions.assertEquals(0, (int) shuffleBoard.get(emptyTileIndex), "This '" + emptyTileIndex + "' is not the empty field index");
   }
@@ -41,21 +30,10 @@ public class SolverTest {
     //given
     List<Integer> gameBoard = board.getGameBoard();
     //when
-    List<Integer> actualPossibleMoves = solver.findThePossibleMoves(gameBoard, emptyTile);
+    List<Integer> actualPossibleMoves = solver.findThePossibleMoves(board, emptyTile);
     //then
     Assertions.assertEquals(expectedPossibleMoves, actualPossibleMoves, "The moves are not correct");
   }
-
-  @Test
-  public void checkIfGameBoardIsSolved() {
-    //given
-    List<Integer> shuffleBoard = board.shuffleBoard(board.getGameBoard());
-    //when
-    List<Integer> gameBoard = solver.solve(shuffleBoard);
-    //then
-    Assertions.assertTrue(solver.isSolved(gameBoard), "The gameboard is not solved");
-  }
-
 
   static Stream<Arguments> correctMoves() {
     return Stream.of(

@@ -3,15 +3,19 @@ package gof;
 import java.util.List;
 
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
 
     Board board = new Board();
-    List<Integer> shuffleBoard = board.shuffleBoard(board.getGameBoard());
-    System.out.println(shuffleBoard);
+    List<Integer> shuffleBoard = board.shuffleBoard();
+
+    System.out.println(shuffleBoard.toString());
     Solver solver = new Solver();
-    System.out.println(solver.findEmptyTile(shuffleBoard));
-    System.out.println(solver.findThePossibleMoves(shuffleBoard,
-        solver.findEmptyTile(shuffleBoard)).toString());
+    System.out.println(board.isSolvable());
+    System.out.println(solver.solve(board));
+    System.out.println(board.isSolved());
+    System.out.println(solver.findEmptyTile(board));
+    System.out.println(solver.findThePossibleMoves(board,
+        solver.findEmptyTile(board)).toString());
 
 
   }

@@ -12,44 +12,29 @@ import lombok.ToString;
 @ToString
 public class Solver {
 
-  private Board board;
+
   private int movesCount = 0;
+  private final UniqueQueue<List<Integer>> queue = new UniqueQueue<>();
+  private Set<List<Integer>> alreadyChecked = new HashSet<>();
 
-  public Solver(Board board) {
-    this.board = board;
-  }
-
-  public boolean isSolvable(List<Integer> gameBoard) {
-    int inversionCount = 0;
-
-    for (int i = 0; i < gameBoard.size() - 1; i++) {
-      for (int j = 0; j < i; j++) {
-        if (gameBoard.get(j) > gameBoard.get(i)) {
-          inversionCount++;
-        }
-      }
-    }
-    return inversionCount % 2 == 0;
-  }
-
-  public int findEmptyTile(List<Integer> gameBoard) {
-    for (int i = 0; i < gameBoard.size(); i++) {
-      if (gameBoard.get(i) == 0) {
+  public int findEmptyTile(Board board) {
+    for (int i = 0; i < board.getGameBoard().size(); i++) {
+      if (board.getGameBoard().get(i) == 0) {
         return i;
       }
     }
     return -1;
   }
 
-  public List<Integer> findThePossibleMoves(List<Integer> gameBoard, int emptyTileIndex) {
+  public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
     Set<Integer> indexesToSwapWithEmptyTile = new HashSet<>();
-    for (int i = 0; i < gameBoard.size(); i++) {
+    for (int i = 0; i < board.getGameBoard().size(); i++) {
       if (emptyTileIndex % Board.ROWLENGTH == 0) {
         indexesToSwapWithEmptyTile.add(emptyTileIndex + 1);
         if (emptyTileIndex >= Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex - Board.ROWLENGTH);
         }
-        if (emptyTileIndex < gameBoard.size() - Board.ROWLENGTH) {
+        if (emptyTileIndex < board.getGameBoard().size() - Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex + Board.ROWLENGTH);
         }
       } else if (emptyTileIndex % Board.ROWLENGTH == Board.ROWLENGTH - 1) {
@@ -57,11 +42,11 @@ public class Solver {
         if (emptyTileIndex > (Board.ROWLENGTH - 1)) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex - Board.ROWLENGTH);
         }
-        if (emptyTileIndex < gameBoard.size() - Board.ROWLENGTH) {
+        if (emptyTileIndex < board.getGameBoard().size() - Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex + Board.ROWLENGTH);
         }
       } else {
-        if (emptyTileIndex < gameBoard.size() - Board.ROWLENGTH) {
+        if (emptyTileIndex < board.getGameBoard().size() - Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex + 1);
           indexesToSwapWithEmptyTile.add(emptyTileIndex - 1);
           indexesToSwapWithEmptyTile.add(emptyTileIndex + Board.ROWLENGTH);
@@ -76,28 +61,32 @@ public class Solver {
     return new ArrayList<>(indexesToSwapWithEmptyTile);
   }
 
-  public List<Integer> solve(List<Integer> gameBoard) {
-    if (isSolved(gameBoard)) {
-      System.out.println("gameboard is solved");
-      return gameBoard;
-    }
-    return gameBoard;
-  }
-
-  public boolean isSolved(List<Integer> gameBoard) {
-    if (gameBoard.get(gameBoard.size() - 1) != 0) {
-      return false;
-    }
-    for (int i = gameBoard.size() - 2; i >= 0; i--) {
-      if (gameBoard.get(i) != i + 1) {
-        return false;
+  public Board solve(Board boardToSolve) throws InterruptedException {
+    queue.add(boardToSolve.getGameBoard());
+    while (!queue.isEmpty()) {
+      Board board = new Board();
+      board.setBoard(queue.remove());
+      System.out.println(queue.toString());
+      if (board.isSolved()) {
+        System.out.println("Gameboard is solved");
+        return board;
       }
+      alreadyChecked.add(board.getGameBoard());
+      List<Integer> correctMoves = findThePossibleMoves(board, findEmptyTile(board));
+      for (int i = 0; i < correctMoves.size(); i++) {
+        Board newBoard = new Board(board);
+        move(newBoard, correctMoves.get(i), findEmptyTile(newBoard));
+        queue.add(newBoard.getGameBoard());
+      }
+//      queue.removeAll(alreadyChecked);
+      Thread.sleep(1000);
     }
-    return true;
+    return null;
   }
 
-  public List<Integer> move(List<Integer> gameBoard, int correctMove, int emptyFileIndex) {
-    Collections.swap(gameBoard, correctMove, emptyFileIndex);
-    return gameBoard;
+
+  public void move(Board board, int correctMove, int emptyFileIndex) {
+    Collections.swap(board.getGameBoard(), correctMove, emptyFileIndex);
   }
 }
+
