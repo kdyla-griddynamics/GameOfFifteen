@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.isIn;
 public class BoardTest {
 
   Board board = new Board();
-  Solver solver = new Solver();
+  Solver solver = new Solver(board);
 
   @Test
   public void createsReadyToPlayBoard() {

@@ -10,12 +10,15 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Solver implements Runnable{
+public class Solver {
 
-
-  private int movesCount = 0;
+  private Board board;
   private final Queue<Board> queue = new LinkedList<>();
   private Set<List<Integer>> alreadyChecked = new HashSet<>();
+
+  public Solver(Board board) {
+    this.board = board;
+  }
 
   public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
     Set<Integer> indexesToSwapWithEmptyTile = new HashSet<>();
@@ -56,13 +59,12 @@ public class Solver implements Runnable{
     queue.add(boardToSolve);
     System.out.println(boardToSolve.getGameBoard().toString());
     while (!queue.isEmpty()) {
-      System.out.println("before remove " + queue.toString());
+      System.out.println(queue.toString());
       Board board = queue.remove();
-      for (Board b : queue
-      ) {
+      for (Board b : queue) {
         if (b.isSolved()) {
           System.out.println("Gameboard is solved");
-          return b;
+          return board;
         }
       }
       alreadyChecked.add(board.getGameBoard());
@@ -70,19 +72,16 @@ public class Solver implements Runnable{
       for (int i = correctMoves.size() - 1; i >= 0; i--) {
         Board newBoard = new Board(board);
         move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
-        queue.add(newBoard);
+        if (!alreadyChecked.contains(newBoard.getGameBoard())) {
+          queue.add(newBoard);
+        }
       }
-      queue.removeIf(b -> alreadyChecked.contains(b.getGameBoard()));
     }
     return null;
   }
 
   public void move(Board board, int correctMove, int emptyFileIndex) {
     Collections.swap(board.getGameBoard(), correctMove, emptyFileIndex);
-  }
-
-  @Override
-  public void run() {
   }
 }
 
