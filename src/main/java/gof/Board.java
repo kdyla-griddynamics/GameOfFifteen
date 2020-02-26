@@ -3,8 +3,6 @@ package gof;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,10 +33,11 @@ public class Board {
 
   public List<Integer> shuffleBoard() {
     do {
-    Collections.shuffle(getGameBoard());
+      Collections.shuffle(getGameBoard());
     } while (!isSolvable());
     return getGameBoard();
   }
+
   public int findEmptyTile() {
     for (int i = 0; i < board.size(); i++) {
       if (board.get(i) == 0) {
@@ -52,15 +51,14 @@ public class Board {
     int inversionCount = 0;
 
     for (int i = 0; i < board.size() - 1; i++) {
-      for (int j = i+1; j < board.size(); j++) {
-        if ((board.get(j) < board.get(i)) && board.get(j)!=0) {
+      for (int j = i + 1; j < board.size(); j++) {
+        if ((board.get(j) < board.get(i)) && board.get(j) != 0) {
           inversionCount++;
         }
       }
     }
-    System.out.println(inversionCount);
     int emptyTile = findEmptyTile();
-    if(inversionCount > 0 && inversionCount < 4 && emptyTile>=board.size()-ROWLENGTH) {
+    if (inversionCount > 0 && inversionCount < 4 && emptyTile >= board.size() - ROWLENGTH) {
       return inversionCount % 2 == 0;
     } else return false;
   }

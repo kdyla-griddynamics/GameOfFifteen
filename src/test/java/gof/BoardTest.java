@@ -45,13 +45,13 @@ public class BoardTest {
   }
 
   @Test
-  public void checkIfGameBoardIsSolved() throws InterruptedException {
+  public void checkIfGameBoardIsSolved() {
     //given
     board.shuffleBoard();
     //when
-    solver.solve(board);
+    Board solvedBoard = solver.solve(board);
     //then
-    Assertions.assertTrue(board.isSolved(), "The gameboard is not solved");
+    Assertions.assertTrue(solvedBoard.isSolved(), "The gameboard is not solved");
   }
 
 

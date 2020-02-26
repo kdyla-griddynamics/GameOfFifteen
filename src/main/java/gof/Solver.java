@@ -10,11 +10,11 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Solver {
+public class Solver implements Runnable{
 
 
   private int movesCount = 0;
-  private final UniqueQueue<List<Integer>> queue = new UniqueQueue<>();
+  private final Queue<Board> queue = new LinkedList<>();
   private Set<List<Integer>> alreadyChecked = new HashSet<>();
 
   public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
@@ -52,33 +52,37 @@ public class Solver {
     return new ArrayList<>(indexesToSwapWithEmptyTile);
   }
 
-  public Board solve(Board boardToSolve) throws InterruptedException {
-    queue.add(boardToSolve.getGameBoard());
+  public Board solve(Board boardToSolve) {
+    queue.add(boardToSolve);
     System.out.println(boardToSolve.getGameBoard().toString());
     while (!queue.isEmpty()) {
-      Board board = new Board();
       System.out.println("before remove " + queue.toString());
-      board.setBoard(queue.remove());
-      if (board.isSolved()) {
-        System.out.println("Gameboard is solved");
-        return board;
+      Board board = queue.remove();
+      for (Board b : queue
+      ) {
+        if (b.isSolved()) {
+          System.out.println("Gameboard is solved");
+          return b;
+        }
       }
       alreadyChecked.add(board.getGameBoard());
       List<Integer> correctMoves = findThePossibleMoves(board, board.findEmptyTile());
-      for (int i = 0; i < correctMoves.size(); i++) {
+      for (int i = correctMoves.size() - 1; i >= 0; i--) {
         Board newBoard = new Board(board);
         move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
-        queue.add(newBoard.getGameBoard());
+        queue.add(newBoard);
       }
-      queue.removeAll(alreadyChecked);
-      Thread.sleep(1000);
+      queue.removeIf(b -> alreadyChecked.contains(b.getGameBoard()));
     }
     return null;
   }
 
-
   public void move(Board board, int correctMove, int emptyFileIndex) {
     Collections.swap(board.getGameBoard(), correctMove, emptyFileIndex);
+  }
+
+  @Override
+  public void run() {
   }
 }
 
