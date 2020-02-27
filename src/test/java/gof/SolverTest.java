@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,9 +15,10 @@ public class SolverTest {
 
   @ParameterizedTest
   @MethodSource("correctMoves")
-  public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves) {
+  public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves) throws BoardNotCompleteException {
     //given
-    List<Integer> gameBoard = board.getGameBoard();
+    List<Integer> shuffledBoard = TilesLoader.load("1");
+    board.setBoard(shuffledBoard);
     //when
     List<Integer> actualPossibleMoves = solver.findThePossibleMoves(board, emptyTile);
     //then

@@ -1,5 +1,6 @@
 package gof;
 
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,20 +15,22 @@ public class BoardTest {
   Solver solver = new Solver();
 
   @Test
-  public void createsReadyToPlayBoard() {
+  public void createsReadyToPlayBoard() throws BoardNotCompleteException {
     //given
-    List<Integer> orderedBoard = board.getGameBoard();
+    Integer[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};
+    List<Integer> orderedBoard = Arrays.asList(arr);
     //when
-    List<Integer> shuffledBoard = board.shuffleBoard();
+    List<Integer> shuffledBoard = TilesLoader.load("1");
     //then
     Assertions.assertNotNull(shuffledBoard, "Board does not exist");
     assertThat("Shuffled board does not contain every tile", shuffledBoard, everyItem(isIn(orderedBoard)));
   }
 
   @Test
-  public void findsThePositionOfEmptyTile() {
+  public void findsThePositionOfEmptyTile() throws BoardNotCompleteException {
     //given
-    List<Integer> shuffleBoard = board.shuffleBoard();
+    List<Integer> shuffleBoard = TilesLoader.load("1");
+    board.setBoard(shuffleBoard);
     //when
     int emptyTileIndex = board.findEmptyTile();
     //then
@@ -35,23 +38,14 @@ public class BoardTest {
   }
 
   @Test
-  public void checkIfTheGameboardIsSolvable() {
+  public void checkIfGameBoardIsSolved() throws BoardNotCompleteException {
     //given
-    List<Integer> shuffleBoard = board.shuffleBoard();
-    //when
-    boolean isSolvable = board.isSolvable();
-    //then
-    Assertions.assertTrue(isSolvable, "This board is nor solvable");
-  }
-
-  @Test
-  public void checkIfGameBoardIsSolved() {
-    //given
-    board.shuffleBoard();
+    List<Integer> shuffleBoard = TilesLoader.load("1");
+    board.setBoard(shuffleBoard);
     //when
     Board solvedBoard = solver.solve(board);
     //then
-    Assertions.assertTrue(solvedBoard.isSolved(), "The gameboard is not solved");
+    Assertions.assertNotEquals(-1, solvedBoard.isSolved(), "The gameboard is not solved");
   }
 
 

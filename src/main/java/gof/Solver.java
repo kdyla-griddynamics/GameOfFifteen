@@ -10,22 +10,21 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Solver implements Runnable{
+public class Solver {
 
-
-  private int movesCount = 0;
   private final Queue<Board> queue = new LinkedList<>();
   private Set<List<Integer>> alreadyChecked = new HashSet<>();
+  private List<Integer> initial = new ArrayList<>();
 
   public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
     Set<Integer> indexesToSwapWithEmptyTile = new HashSet<>();
-    for (int i = 0; i < board.getGameBoard().size(); i++) {
+    for (int i = 0; i < board.getBoard().size(); i++) {
       if (emptyTileIndex % Board.ROWLENGTH == 0) {
         indexesToSwapWithEmptyTile.add(emptyTileIndex + 1);
         if (emptyTileIndex >= Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex - Board.ROWLENGTH);
         }
-        if (emptyTileIndex < board.getGameBoard().size() - Board.ROWLENGTH) {
+        if (emptyTileIndex < board.getBoard().size() - Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex + Board.ROWLENGTH);
         }
       } else if (emptyTileIndex % Board.ROWLENGTH == Board.ROWLENGTH - 1) {
@@ -33,11 +32,11 @@ public class Solver implements Runnable{
         if (emptyTileIndex > (Board.ROWLENGTH - 1)) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex - Board.ROWLENGTH);
         }
-        if (emptyTileIndex < board.getGameBoard().size() - Board.ROWLENGTH) {
+        if (emptyTileIndex < board.getBoard().size() - Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex + Board.ROWLENGTH);
         }
       } else {
-        if (emptyTileIndex < board.getGameBoard().size() - Board.ROWLENGTH) {
+        if (emptyTileIndex < board.getBoard().size() - Board.ROWLENGTH) {
           indexesToSwapWithEmptyTile.add(emptyTileIndex + 1);
           indexesToSwapWithEmptyTile.add(emptyTileIndex - 1);
           indexesToSwapWithEmptyTile.add(emptyTileIndex + Board.ROWLENGTH);
@@ -53,36 +52,52 @@ public class Solver implements Runnable{
   }
 
   public Board solve(Board boardToSolve) {
+    initial = boardToSolve.getBoard();
     queue.add(boardToSolve);
-    System.out.println(boardToSolve.getGameBoard().toString());
+    System.out.println(boardToSolve.getBoard().toString());
     while (!queue.isEmpty()) {
-      System.out.println("before remove " + queue.toString());
       Board board = queue.remove();
-      for (Board b : queue
-      ) {
-        if (b.isSolved()) {
+      if (board.isSolved() >= 0) {
+        System.out.println("Gameboard is solved");
+        return board;
+      } else if (board.getParents().size() > 12) {
+        System.out.println("Gameboard is not solved");
+        return board;
+      }
+      for (Board b : queue) {
+        if (b.isSolved() >= 0) {
           System.out.println("Gameboard is solved");
           return b;
         }
       }
-      alreadyChecked.add(board.getGameBoard());
+      alreadyChecked.add(board.getBoard());
       List<Integer> correctMoves = findThePossibleMoves(board, board.findEmptyTile());
-      for (int i = correctMoves.size() - 1; i >= 0; i--) {
+      for (int i = 0; i < correctMoves.size(); i++) {
         Board newBoard = new Board(board);
         move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
-        queue.add(newBoard);
+        if (!alreadyChecked.contains(newBoard.getBoard())) {
+          queue.add(newBoard);
+        }
       }
-      queue.removeIf(b -> alreadyChecked.contains(b.getGameBoard()));
     }
     return null;
   }
 
   public void move(Board board, int correctMove, int emptyFileIndex) {
-    Collections.swap(board.getGameBoard(), correctMove, emptyFileIndex);
-  }
-
-  @Override
-  public void run() {
+    Collections.swap(board.getBoard(), correctMove, emptyFileIndex);
+    if (correctMove == emptyFileIndex + 1) {
+      board.getPath().add("Right");
+      board.getParents().add(board.getBoard());
+    } else if (correctMove == emptyFileIndex - 1) {
+      board.getPath().add("Left");
+      board.getParents().add(board.getBoard());
+    } else if (correctMove == emptyFileIndex + Board.ROWLENGTH) {
+      board.getPath().add("Down");
+      board.getParents().add(board.getBoard());
+    } else if (correctMove == emptyFileIndex - Board.ROWLENGTH) {
+      board.getPath().add("Up");
+      board.getParents().add(board.getBoard());
+    }
   }
 }
 
