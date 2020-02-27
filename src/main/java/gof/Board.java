@@ -1,8 +1,9 @@
 package gof;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,27 +16,19 @@ import lombok.ToString;
 @ToString
 public class Board {
 
+  public static final int ROWLENGTH = 4;
   private List<Integer> board = new ArrayList<>();
-  public static final int ROWLENGTH = 3;
+  private List<String> path = new ArrayList<>();
+  private List<List<Integer>> parents = new ArrayList<>();
+
+  public Board(String boardSource) throws BoardNotCompleteException {
+    setBoard(TilesLoader.load(boardSource));
+  }
 
   public Board(Board board) {
-    this.board.addAll(board.getGameBoard());
-  }
-
-  public List<Integer> getGameBoard() {
-    if (board.isEmpty()) {
-      for (int i = 0; i < 9; i++) {
-        board.add(i);
-      }
-    }
-    return board;
-  }
-
-  public List<Integer> shuffleBoard() {
-    do {
-      Collections.shuffle(getGameBoard());
-    } while (!isSolvable());
-    return getGameBoard();
+    this.board.addAll(board.getBoard());
+    this.path.addAll(board.getPath());
+    this.parents.addAll(board.getParents());
   }
 
   public int findEmptyTile() {
@@ -47,31 +40,15 @@ public class Board {
     return -1;
   }
 
-  public boolean isSolvable() {
-    int inversionCount = 0;
-
-    for (int i = 0; i < board.size() - 1; i++) {
-      for (int j = i + 1; j < board.size(); j++) {
-        if ((board.get(j) < board.get(i)) && board.get(j) != 0) {
-          inversionCount++;
-        }
-      }
-    }
-    int emptyTile = findEmptyTile();
-    if (inversionCount > 0 && inversionCount < 4 && emptyTile >= board.size() - ROWLENGTH) {
-      return inversionCount % 2 == 0;
-    } else return false;
-  }
-
-  public boolean isSolved() {
+  public int isSolved() {
     if (board.get(board.size() - 1) != 0) {
-      return false;
+      return -1;
     }
     for (int i = board.size() - 2; i >= 0; i--) {
       if (board.get(i) != i + 1) {
-        return false;
+        return -1;
       }
     }
-    return true;
+    return parents.size();
   }
 }
