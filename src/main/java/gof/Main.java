@@ -2,13 +2,15 @@ package gof;
 
 
 public class Main {
-  public static void main(String[] args) throws BoardNotCompleteException {
+  public static void main(String[] args) {
 
-    Board board = new Board("6");
-    Solver solver = new Solver();
-    Board solvedBoard = solver.solve(board);
-    System.out.println(solvedBoard.getPath().toString());
-    System.out.println(solvedBoard.getParents().toString());
-    ResultWriter.writeToFile(solvedBoard, solver);
+    try {
+      Board board = new Board("10");
+      Solver solver = new Solver();
+      Board solvedBoard = solver.solve(board);
+      ResultWriter.writeToFile(solvedBoard, solver);
+    } catch (BoardNotCompleteException e) {
+      System.err.println(e.getMessage());
+    }
   }
 }

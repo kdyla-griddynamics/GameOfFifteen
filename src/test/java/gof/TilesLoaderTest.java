@@ -16,4 +16,8 @@ public class TilesLoaderTest {
     Assertions.assertNotNull(loadedBoard, "The loaded board is empty");
   }
 
+  @Test
+  public void checkIfTooShortBoardCausesException() {
+    Assertions.assertThrows(BoardNotCompleteException.class, () -> TilesLoader.load("tooshort"));
+  }
 }

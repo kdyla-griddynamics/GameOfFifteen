@@ -23,7 +23,7 @@ public class TilesLoader {
         loadedBoard.add(nextTile);
       }
     } catch (FileNotFoundException e) {
-      System.err.println("Board scheme not found");
+      System.err.println("Board file not found");
       e.getMessage();
     }
     if (loadedBoard.size() == 16) {
