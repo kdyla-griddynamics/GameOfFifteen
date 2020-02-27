@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,6 +24,20 @@ public class SolverTest {
     List<Integer> actualPossibleMoves = solver.findThePossibleMoves(board, emptyTile);
     //then
     Assertions.assertEquals(expectedPossibleMoves, actualPossibleMoves, "The moves are not correct");
+  }
+
+  @Test
+  public void checkIfMoveChangesTilePosition() throws BoardNotCompleteException {
+    //given
+    List<Integer> shuffledBoard = TilesLoader.load("1");
+    board.setBoard(shuffledBoard);
+    //when
+    int emptyTile = board.findEmptyTile();
+    List<Integer> correctMoves = solver.findThePossibleMoves(board, emptyTile);
+    int neighborTile = correctMoves.get(0);
+    solver.move(board, neighborTile, emptyTile);
+    //then
+    Assertions.assertEquals(board.findEmptyTile(), neighborTile, "The tiles moved incorrectly");
   }
 
   static Stream<Arguments> correctMoves() {
