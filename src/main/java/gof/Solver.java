@@ -72,7 +72,7 @@ public class Solver {
       for (Board b : queue) {
         if (b.isSolved() >= 0) {
           System.out.println("Gameboard is solved");
-          return board;
+          return b;
         }
       }
       alreadyChecked.add(board.getBoard());
