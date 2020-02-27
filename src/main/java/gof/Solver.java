@@ -12,9 +12,14 @@ import lombok.ToString;
 @ToString
 public class Solver {
 
+  private Board board;
   private final Queue<Board> queue = new LinkedList<>();
   private Set<List<Integer>> alreadyChecked = new HashSet<>();
   private List<Integer> initial = new ArrayList<>();
+
+  public Solver(Board board) {
+    this.board = board;
+  }
 
   public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
     Set<Integer> indexesToSwapWithEmptyTile = new HashSet<>();
@@ -67,7 +72,7 @@ public class Solver {
       for (Board b : queue) {
         if (b.isSolved() >= 0) {
           System.out.println("Gameboard is solved");
-          return b;
+          return board;
         }
       }
       alreadyChecked.add(board.getBoard());
