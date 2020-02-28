@@ -4,7 +4,7 @@ package gof;
 public class Main {
   public static void main(String[] args) {
 
-    findSolutionAndWriteResults("38k");
+    findSolutionAndWriteResults("38");
   }
 
   public static void findSolutionAndWriteResults(String boardSourceFileName) {

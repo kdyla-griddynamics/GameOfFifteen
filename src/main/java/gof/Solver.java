@@ -52,7 +52,7 @@ public class Solver {
         }
       }
     }
-    if (board.getParents().size() > 0) {
+    if (board.getPreviousMove() < board.getBoard().size()) {
       indexesToSwapWithEmptyTile.remove(board.getPreviousMove());
     }
     return new ArrayList<>(indexesToSwapWithEmptyTile);

@@ -20,7 +20,7 @@ public class Board {
   private List<List<Integer>> parents = new ArrayList<>();
   private int manhattanDistance = 0;
   private int estimatedMinimumCost = Integer.MAX_VALUE;
-  private int previousMove;
+  private int previousMove = ROWLENGTH * ROWLENGTH;
 
   public Board(String boardSource) throws BoardNotCompleteException {
     setBoard(TilesLoader.load(boardSource));
