@@ -17,7 +17,7 @@ public class TilesLoaderTest {
   }
 
   @Test
-  public void checkIfTooShortBoardCausesException() {
+  public void checkIfTooShortOrTooLongBoardCausesException() {
     Assertions.assertThrows(BoardNotCompleteException.class, () -> TilesLoader.load("tooshort"));
   }
 }

@@ -14,7 +14,7 @@ public class TilesLoader {
 
   public static List<Integer> load(String fileName) throws BoardNotCompleteException {
     List<Integer> loadedBoard = new ArrayList<>();
-    String resourcePath = "src/main/resources/boardsNamedByMovesToSolveNumber/";
+    String resourcePath = "src/main/resources/";
     File sourceFile = new File(resourcePath + fileName);
 
     try (Scanner scanner = new Scanner(sourceFile)) {
@@ -29,7 +29,7 @@ public class TilesLoader {
     if (loadedBoard.size() == 16) {
       return loadedBoard;
     } else {
-      throw new BoardNotCompleteException("Board is not loaded completely");
+      throw new BoardNotCompleteException("Board has too many or too few tiles");
     }
   }
 }

@@ -43,7 +43,7 @@ public class BoardTest {
     List<Integer> shuffleBoard = TilesLoader.load("1");
     board.setBoard(shuffleBoard);
     //when
-    Board solvedBoard = solver.solve(board);
+    Board solvedBoard = solver.solve(board, 0, 50);
     //then
     Assertions.assertNotEquals(-1, solvedBoard.isSolved(), "The gameboard is not solved");
   }

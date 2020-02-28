@@ -13,13 +13,11 @@ import lombok.ToString;
 @ToString
 public class Solver {
 
-  private Board board;
-  private final Queue<Board> queue = new LinkedList<>();
-  private Set<List<Integer>> alreadyChecked = new HashSet<>();
   private List<Integer> initial = new ArrayList<>();
+  public Set<List<Integer>> alreadyChecked = new HashSet<>();
 
   public Solver(Board board) {
-    this.board = board;
+    this.initial = board.getBoard();
   }
 
   public List<Integer> findThePossibleMoves(Board board, int emptyTileIndex) {
@@ -54,39 +52,33 @@ public class Solver {
         }
       }
     }
+    if (board.getParents().size() > 0) {
+      indexesToSwapWithEmptyTile.remove(board.getPreviousMove());
+    }
     return new ArrayList<>(indexesToSwapWithEmptyTile);
   }
 
-  public Board solve(Board boardToSolve) {
-    initial = boardToSolve.getBoard();
-    queue.add(boardToSolve);
-    System.out.println(boardToSolve.getBoard().toString());
-    while (!queue.isEmpty()) {
-      Board board = queue.remove();
-      if (board.isSolved() >= 0) {
-        System.out.println("Gameboard is solved");
-        return board;
-      } else if (board.getParents().size() > 12) {
-        System.out.println("Gameboard is not solved");
-        return board;
+  public Board solve(Board boardToSolve, int cost, int threshold) {
+    int estimatedCost = boardToSolve.getManhattanDistance() + cost;
+    if (boardToSolve.isSolved() >= 0 || estimatedCost > threshold) {
+      boardToSolve.setEstimatedMinimumCost(estimatedCost);
+      return boardToSolve;
+    }
+    int minimumCost = Integer.MAX_VALUE;
+    List<Integer> correctMoves = findThePossibleMoves(boardToSolve, boardToSolve.findEmptyTile());
+    for (int i = 0; i < correctMoves.size(); i++) {
+      Board newBoard = new Board(boardToSolve);
+      move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
+      Board solvedBoard = solve(newBoard, cost + 1, threshold);
+      if (solvedBoard.isSolved() >= 0) {
+        return solvedBoard;
       }
-      for (Board b : queue) {
-        if (b.isSolved() >= 0) {
-          System.out.println("Gameboard is solved");
-          return b;
-        }
-      }
-      alreadyChecked.add(board.getBoard());
-      List<Integer> correctMoves = findThePossibleMoves(board, board.findEmptyTile());
-      for (int i = 0; i < correctMoves.size(); i++) {
-        Board newBoard = new Board(board);
-        move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
-        if (!alreadyChecked.contains(newBoard.getBoard())) {
-          queue.add(newBoard);
-        }
+      if (solvedBoard.getEstimatedMinimumCost() < minimumCost) {
+        minimumCost = solvedBoard.getEstimatedMinimumCost();
       }
     }
-    return null;
+    boardToSolve.setEstimatedMinimumCost(minimumCost);
+    return boardToSolve;
   }
 
   public void move(Board board, int correctMove, int emptyFileIndex) {
