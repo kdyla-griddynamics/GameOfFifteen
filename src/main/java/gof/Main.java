@@ -5,7 +5,7 @@ public class Main {
   public static void main(String[] args) {
 
     try {
-      Board board = new Board("10");
+      Board board = new Board("1");
       Solver solver = new Solver();
       Board solvedBoard = solver.solve(board);
       ResultWriter.writeToFile(solvedBoard, solver);

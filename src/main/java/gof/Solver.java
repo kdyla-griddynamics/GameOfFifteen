@@ -66,15 +66,6 @@ public class Solver {
       if (board.isSolved() >= 0) {
         System.out.println("Gameboard is solved");
         return board;
-      } else if (board.getParents().size() > 12) {
-        System.out.println("Gameboard is not solved");
-        return board;
-      }
-      for (Board b : queue) {
-        if (b.isSolved() >= 0) {
-          System.out.println("Gameboard is solved");
-          return b;
-        }
       }
       alreadyChecked.add(board.getBoard());
       List<Integer> correctMoves = findThePossibleMoves(board, board.findEmptyTile());
@@ -82,7 +73,7 @@ public class Solver {
         Board newBoard = new Board(board);
         move(newBoard, correctMoves.get(i), newBoard.findEmptyTile());
         if (!alreadyChecked.contains(newBoard.getBoard())) {
-          queue.add(newBoard);
+          solve(newBoard);
         }
       }
     }
