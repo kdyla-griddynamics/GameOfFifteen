@@ -1,6 +1,10 @@
 package gof;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,16 +60,18 @@ public class Solver {
     try {
       Puzzle puzzle = new Puzzle(puzzleSourceFileName);
       initial = puzzle.getCurrentState();
-      int threshold = puzzle.getManhattanDistance();
-      System.out.println("Puzzle's manhattan distance: " + threshold);
-      System.out.println("Searching...");
-      while (puzzle.isSolved() < 0) {
-        puzzle = searchWithIDA(puzzle, 0, threshold);
-        if (puzzle.isSolved() < 0) {
-          threshold = puzzle.getEstimatedMinimumCost();
+      if (puzzle.isSolvable()) {
+        int threshold = puzzle.getManhattanDistance();
+        System.out.println("Puzzle's manhattan distance: " + threshold);
+        System.out.println("Searching...");
+        while (puzzle.isSolved() < 0) {
+          puzzle = searchWithIDA(puzzle, 0, threshold);
+          if (puzzle.isSolved() < 0) {
+            threshold = puzzle.getEstimatedMinimumCost();
+          }
         }
+        System.out.println("Puzzle is solved.");
       }
-      System.out.println("Puzzle is solved.");
       ResultWriter.writeToFile(puzzle, initial);
       return puzzle;
     } catch (PuzzleNotCompleteException e) {

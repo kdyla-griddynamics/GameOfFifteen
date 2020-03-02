@@ -2,7 +2,6 @@ package gof;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +32,33 @@ public class Puzzle {
     this.previousStates.addAll(puzzle.getPreviousStates());
     this.previousMove = puzzle.findEmptyTile();
     this.manhattanDistance = countManhattanDistance();
+  }
+
+  public int getInversionCount() {
+    int invCount = 0;
+    for (int i = 0; i < currentState.size() - 1; i++) {
+      for (int j = i + 1; j < currentState.size(); j++) {
+        if (currentState.get(i) > currentState.get(j) && currentState.get(j) != 0) {
+          invCount++;
+        }
+      }
+    }
+    return invCount;
+  }
+
+  public boolean isSolvable() {
+    int invCount = getInversionCount();
+    int emptyTileIndex = findEmptyTile();
+
+    if (invCount % 2 == 0 && emptyTileIndex >= ROWLENGTH && emptyTileIndex < 2 * ROWLENGTH) {
+      return true;
+    } else if (invCount % 2 != 0 && emptyTileIndex < ROWLENGTH) {
+      return true;
+    } else if (invCount % 2 == 0 && emptyTileIndex >= 3 * ROWLENGTH) {
+      return true;
+    } else {
+      return invCount % 2 != 0 && emptyTileIndex >= 2 * ROWLENGTH && emptyTileIndex < 3 * ROWLENGTH;
+    }
   }
 
   public int findEmptyTile() {
