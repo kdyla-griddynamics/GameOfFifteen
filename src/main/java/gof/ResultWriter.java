@@ -4,19 +4,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ResultWriter {
 
-  public static void writeToFile(Board board, Solver solver) {
-    File result = new File("src/main/resources/result.txt");
-    List<Integer> init = solver.getInitial();
+  public static final File result = new File("src/main/resources/result.txt");
+
+  public static void writeToFile(Puzzle puzzle, List<Integer> initial) {
     try (FileWriter writer = new FileWriter(result)) {
       writer.write("Initial configuration: \n");
-      writeBoardAsArray(init, writer);
-      writer.write("\nNumber of tiles movement: " + board.isSolved() + "\n");
-      for (int i = 0; i < board.getPath().size(); i++) {
-        writer.write(board.getPath().get(i) + "\n");
-        List<Integer> parent = board.getParents().get(i);
+      writeBoardAsArray(initial, writer);
+      writer.write("\nNumber of tiles movement: " + puzzle.isSolved() + "\n");
+      for (int i = 0; i < puzzle.getPath().size(); i++) {
+        writer.write(puzzle.getPath().get(i) + "\n");
+        List<Integer> parent = puzzle.getPreviousStates().get(i);
         writeBoardAsArray(parent, writer);
         writer.write("\n");
       }
@@ -26,9 +28,9 @@ public class ResultWriter {
   }
 
   private static void writeBoardAsArray(List<Integer> init, FileWriter writer) throws IOException {
-    for (int i = 0; i < init.size(); i += Board.ROWLENGTH) {
+    for (int i = 0; i < init.size(); i += Puzzle.ROWLENGTH) {
       writer.write("[ ");
-      for (int j = 0; j < Board.ROWLENGTH; j++) {
+      for (int j = 0; j < Puzzle.ROWLENGTH; j++) {
         writer.write(init.get(i + j) + " ");
       }
       writer.write("]\n");

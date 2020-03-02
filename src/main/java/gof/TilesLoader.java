@@ -12,24 +12,24 @@ import lombok.Setter;
 @Setter
 public class TilesLoader {
 
-  public static List<Integer> load(String fileName) throws BoardNotCompleteException {
-    List<Integer> loadedBoard = new ArrayList<>();
+  public static List<Integer> load(String fileName) throws PuzzleNotCompleteException {
+    List<Integer> loadedPuzzle = new ArrayList<>();
     String resourcePath = "src/main/resources/";
     File sourceFile = new File(resourcePath + fileName);
 
     try (Scanner scanner = new Scanner(sourceFile)) {
       while (scanner.hasNextLine()) {
         int nextTile = Integer.parseInt(scanner.nextLine());
-        loadedBoard.add(nextTile);
+        loadedPuzzle.add(nextTile);
       }
     } catch (FileNotFoundException e) {
-      System.err.println("Board file not found");
+      System.err.println("Puzzle file not found");
       e.getMessage();
     }
-    if (loadedBoard.size() == 16) {
-      return loadedBoard;
+    if (loadedPuzzle.size() == 16) {
+      return loadedPuzzle;
     } else {
-      throw new BoardNotCompleteException("Board has too many or too few tiles");
+      throw new PuzzleNotCompleteException("Puzzle has too many or too few tiles");
     }
   }
 }

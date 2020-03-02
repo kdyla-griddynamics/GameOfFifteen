@@ -11,33 +11,33 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class SolverTest {
 
-  Board board = new Board();
+  Puzzle puzzle = new Puzzle();
   Solver solver = new Solver();
 
   @ParameterizedTest
   @MethodSource("correctMoves")
-  public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves) throws BoardNotCompleteException {
+  public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves) throws PuzzleNotCompleteException {
     //given
-    List<Integer> shuffledBoard = TilesLoader.load("1");
-    board.setBoard(shuffledBoard);
+    List<Integer> shuffledPuzzle = TilesLoader.load("1");
+    puzzle.setCurrentState(shuffledPuzzle);
     //when
-    List<Integer> actualPossibleMoves = solver.findThePossibleMoves(board, emptyTile);
+    List<Integer> actualPossibleMoves = solver.findThePossibleMoves(puzzle, emptyTile);
     //then
     Assertions.assertEquals(expectedPossibleMoves, actualPossibleMoves, "The moves are not correct");
   }
 
   @Test
-  public void checkIfMoveChangesTilePosition() throws BoardNotCompleteException {
+  public void checkIfMoveChangesTilePosition() throws PuzzleNotCompleteException {
     //given
-    List<Integer> shuffledBoard = TilesLoader.load("1");
-    board.setBoard(shuffledBoard);
+    List<Integer> shuffledPuzzle = TilesLoader.load("1");
+    puzzle.setCurrentState(shuffledPuzzle);
     //when
-    int emptyTile = board.findEmptyTile();
-    List<Integer> correctMoves = solver.findThePossibleMoves(board, emptyTile);
+    int emptyTile = puzzle.findEmptyTile();
+    List<Integer> correctMoves = solver.findThePossibleMoves(puzzle, emptyTile);
     int neighborTile = correctMoves.get(0);
-    solver.move(board, neighborTile, emptyTile);
+    solver.move(puzzle, neighborTile, emptyTile);
     //then
-    Assertions.assertEquals(board.findEmptyTile(), neighborTile, "The tiles moved incorrectly");
+    Assertions.assertEquals(puzzle.findEmptyTile(), neighborTile, "The tiles moved incorrectly");
   }
 
   static Stream<Arguments> correctMoves() {
