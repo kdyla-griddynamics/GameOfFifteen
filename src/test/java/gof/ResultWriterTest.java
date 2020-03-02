@@ -1,10 +1,11 @@
 package gof;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 public class ResultWriterTest {
 
@@ -12,7 +13,7 @@ public class ResultWriterTest {
   Solver solver = new Solver();
 
   @Test
-  public void checkIfResultFileIsCreated() throws PuzzleNotCompleteException {
+  public void checkIfResultFileIsCreated() throws InvalidPuzzleException {
     //given
     String puzzleSourceFileName = "1";
     List<Integer> shuffledPuzzle = TilesLoader.load(puzzleSourceFileName);

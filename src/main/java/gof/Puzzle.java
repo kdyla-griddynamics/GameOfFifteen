@@ -21,7 +21,7 @@ public class Puzzle {
   private int estimatedMinimumCost = Integer.MAX_VALUE;
   private int previousMove = ROWLENGTH * ROWLENGTH;
 
-  public Puzzle(String boardSource) throws PuzzleNotCompleteException {
+  public Puzzle(String boardSource) throws InvalidPuzzleException {
     setCurrentState(TilesLoader.load(boardSource));
     this.manhattanDistance = countManhattanDistance();
   }

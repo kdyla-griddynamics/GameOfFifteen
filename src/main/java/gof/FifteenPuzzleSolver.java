@@ -7,6 +7,6 @@ package gof;
 public class FifteenPuzzleSolver {
   public static void main(String[] args) {
     Solver solver = new Solver();
-    solver.solveGivenPuzzle("1");
+    solver.solveGivenPuzzle("30");
   }
 }

@@ -1,16 +1,17 @@
 package gof;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 public class TilesLoaderTest {
 
   @Test
-  public void checkIfPresentFilesAreLoadedProperly() throws PuzzleNotCompleteException {
+  public void checkIfPresentFilesAreLoadedProperly() throws InvalidPuzzleException {
     //given
     List<Integer> loadedPuzzle = TilesLoader.load("1");
     //when
@@ -21,6 +22,6 @@ public class TilesLoaderTest {
 
   @Test
   public void checkIfTooShortOrTooLongBoardCausesException() {
-    Assertions.assertThrows(PuzzleNotCompleteException.class, () -> TilesLoader.load("tooshort"));
+    Assertions.assertThrows(InvalidPuzzleException.class, () -> TilesLoader.load("tooshort"));
   }
 }

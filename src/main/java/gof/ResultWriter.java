@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
 public class ResultWriter {
 

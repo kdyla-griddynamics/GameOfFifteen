@@ -65,22 +65,24 @@ public class Solver {
         System.out.println("Puzzle's manhattan distance: " + threshold);
         System.out.println("Searching...");
         while (puzzle.isSolved() < 0) {
-          puzzle = searchWithIDA(puzzle, 0, threshold);
+          puzzle = searchWithIda(puzzle, 0, threshold);
           if (puzzle.isSolved() < 0) {
             threshold = puzzle.getEstimatedMinimumCost();
           }
         }
         System.out.println("Puzzle is solved.");
+      } else {
+        System.out.println("Puzzle is not solvable");
       }
       ResultWriter.writeToFile(puzzle, initial);
       return puzzle;
-    } catch (PuzzleNotCompleteException e) {
+    } catch (InvalidPuzzleException e) {
       System.err.println(e.getMessage());
       return null;
     }
   }
 
-  public Puzzle searchWithIDA(Puzzle puzzleToSolve, int cost, int threshold) {
+  public Puzzle searchWithIda(Puzzle puzzleToSolve, int cost, int threshold) {
     int estimatedCost = puzzleToSolve.getManhattanDistance() + cost;
     if (puzzleToSolve.isSolved() >= 0 || estimatedCost > threshold) {
       puzzleToSolve.setEstimatedMinimumCost(estimatedCost);
@@ -91,7 +93,7 @@ public class Solver {
     for (int i = 0; i < correctMoves.size(); i++) {
       Puzzle newPuzzle = new Puzzle(puzzleToSolve);
       move(newPuzzle, correctMoves.get(i), newPuzzle.findEmptyTile());
-      Puzzle solvedPuzzle = searchWithIDA(newPuzzle, cost + 1, threshold);
+      Puzzle solvedPuzzle = searchWithIda(newPuzzle, cost + 1, threshold);
       if (solvedPuzzle.isSolved() >= 0) {
         return solvedPuzzle;
       }

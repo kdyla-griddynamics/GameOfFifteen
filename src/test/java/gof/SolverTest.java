@@ -3,6 +3,7 @@ package gof;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,18 +17,20 @@ public class SolverTest {
 
   @ParameterizedTest
   @MethodSource("correctMoves")
-  public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves) throws PuzzleNotCompleteException {
+  public void checkIfTheMoveRestrictionAreCorrect(int emptyTile, List<Integer> expectedPossibleMoves)
+      throws InvalidPuzzleException {
     //given
     List<Integer> shuffledPuzzle = TilesLoader.load("1");
     puzzle.setCurrentState(shuffledPuzzle);
     //when
     List<Integer> actualPossibleMoves = solver.findThePossibleMoves(puzzle, emptyTile);
     //then
-    Assertions.assertEquals(expectedPossibleMoves, actualPossibleMoves, "The moves are not correct");
+    Assertions.assertEquals(expectedPossibleMoves, actualPossibleMoves,
+        "The moves are not correct");
   }
 
   @Test
-  public void checkIfMoveChangesTilePosition() throws PuzzleNotCompleteException {
+  public void checkIfMoveChangesTilePosition() throws InvalidPuzzleException {
     //given
     List<Integer> shuffledPuzzle = TilesLoader.load("1");
     puzzle.setCurrentState(shuffledPuzzle);
