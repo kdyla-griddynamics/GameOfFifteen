@@ -18,7 +18,7 @@ public class Solver {
 
   private List<Integer> initial = new ArrayList<>();
 
-  public List<Integer> findThePossibleMoves(Puzzle puzzle, int emptyTileIndex) {
+  List<Integer> findThePossibleMoves(Puzzle puzzle, int emptyTileIndex) {
     Set<Integer> indexesToSwapWithEmptyTile = new HashSet<>();
     for (int i = 0; i < puzzle.getCurrentState().size(); i++) {
       if (emptyTileIndex % Puzzle.ROWLENGTH == 0) {
@@ -56,7 +56,7 @@ public class Solver {
     return new ArrayList<>(indexesToSwapWithEmptyTile);
   }
 
-  public Puzzle solveGivenPuzzle(String puzzleSourceFileName) {
+  Puzzle solveGivenPuzzle(String puzzleSourceFileName) {
     try {
       Puzzle puzzle = new Puzzle(puzzleSourceFileName);
       initial = puzzle.getCurrentState();
@@ -82,7 +82,7 @@ public class Solver {
     }
   }
 
-  public Puzzle searchWithIda(Puzzle puzzleToSolve, int cost, int threshold) {
+  Puzzle searchWithIda(Puzzle puzzleToSolve, int cost, int threshold) {
     int estimatedCost = puzzleToSolve.getManhattanDistance() + cost;
     if (puzzleToSolve.isSolved() >= 0 || estimatedCost > threshold) {
       puzzleToSolve.setEstimatedMinimumCost(estimatedCost);
@@ -90,9 +90,9 @@ public class Solver {
     }
     int minimumCost = Integer.MAX_VALUE;
     List<Integer> correctMoves = findThePossibleMoves(puzzleToSolve, puzzleToSolve.findEmptyTile());
-    for (int i = 0; i < correctMoves.size(); i++) {
+    for (Integer correctMove : correctMoves) {
       Puzzle newPuzzle = new Puzzle(puzzleToSolve);
-      move(newPuzzle, correctMoves.get(i), newPuzzle.findEmptyTile());
+      move(newPuzzle, correctMove, newPuzzle.findEmptyTile());
       Puzzle solvedPuzzle = searchWithIda(newPuzzle, cost + 1, threshold);
       if (solvedPuzzle.isSolved() >= 0) {
         return solvedPuzzle;
@@ -105,7 +105,7 @@ public class Solver {
     return puzzleToSolve;
   }
 
-  public void move(Puzzle puzzle, int correctMove, int emptyFileIndex) {
+  void move(Puzzle puzzle, int correctMove, int emptyFileIndex) {
     Collections.swap(puzzle.getCurrentState(), correctMove, emptyFileIndex);
     if (correctMove == emptyFileIndex + 1) {
       puzzle.getPath().add("Right");
