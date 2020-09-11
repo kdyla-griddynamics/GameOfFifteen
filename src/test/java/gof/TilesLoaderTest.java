@@ -10,18 +10,18 @@ import org.junit.jupiter.api.Test;
 
 public class TilesLoaderTest {
 
-  @Test
-  public void checkIfPresentFilesAreLoadedProperly() throws InvalidPuzzleException {
-    //given
-    List<Integer> loadedPuzzle = TilesLoader.load("1");
-    //when
-    boolean isEmpty = loadedPuzzle.isEmpty();
-    //then
-    assertThat("The puzzle has not loaded properly", isEmpty, equalTo(Boolean.FALSE));
-  }
+   @Test
+   public void checkIfPresentFilesAreLoadedProperly() throws InvalidPuzzleException {
+      //given
+      List<Integer> loadedPuzzle = TilesLoader.load("1");
+      //when
+      boolean isEmpty = loadedPuzzle.isEmpty();
+      //then
+      assertThat("The puzzle has not loaded properly", isEmpty, equalTo(Boolean.FALSE));
+   }
 
-  @Test
-  public void checkIfTooShortOrTooLongBoardCausesException() {
-    Assertions.assertThrows(InvalidPuzzleException.class, () -> TilesLoader.load("tooshort"));
-  }
+   @Test
+   public void checkIfTooShortOrTooLongBoardCausesException() {
+      Assertions.assertThrows(InvalidPuzzleException.class, () -> TilesLoader.load("tooshort"));
+   }
 }

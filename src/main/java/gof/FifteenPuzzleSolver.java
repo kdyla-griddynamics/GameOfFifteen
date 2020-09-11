@@ -6,8 +6,8 @@ package gof;
  * Puzzle boards are located in resource folder.
  */
 public class FifteenPuzzleSolver {
-  public static void main(String[] args) {
-    Solver solver = new Solver();
-    solver.solveGivenPuzzle("28");
-  }
+   public static void main(String[] args) {
+      Solver solver = new Solver();
+      solver.solveGivenPuzzle("28");
+   }
 }
